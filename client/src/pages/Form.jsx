@@ -46,11 +46,12 @@ const Form = () => {
                 water_intake: parseFloat(formData.water_intake)
             };
 
-            const response = await axios.post('http://localhost:3000/api/health-plan', dataToSend);
+            const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+            const response = await axios.post(`${apiUrl}/api/health-plan`, dataToSend);
             navigate('/results', { state: response.data });
         } catch (error) {
             console.error('Error:', error);
-            alert('Failed to generate plan. Ensure the server is running on port 3000.');
+            alert('Failed to generate plan. Ensure the backend server is running and accessible.');
         } finally {
             setLoading(false);
         }
