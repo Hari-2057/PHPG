@@ -1,10 +1,3 @@
-const express = require('express');
-const cors = require('cors');
-const app = express();
-
-app.use(cors());
-app.use(express.json());
-
 function predictRisk(data) {
     let score = 0;
     // Age
@@ -91,7 +84,27 @@ function getRecommendations(data, riskLevel) {
     return recommendations;
 }
 
-app.post('/api/health-plan', (req, res) => {
+module.exports = async function handler(req, res) {
+    // Enable CORS
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+    res.setHeader(
+        'Access-Control-Allow-Headers',
+        'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+    );
+
+    // Handle OPTIONS request for CORS preflight
+    if (req.method === 'OPTIONS') {
+        res.status(200).end();
+        return;
+    }
+
+    if (req.method !== 'POST') {
+        res.status(405).json({ success: false, message: 'Method Not Allowed' });
+        return;
+    }
+
     try {
         const data = req.body;
         const riskResult = predictRisk(data);
@@ -105,7 +118,7 @@ app.post('/api/health-plan', (req, res) => {
         else if (bmi >= 25 && bmi < 30) bmiCategory = 'Overweight';
         else if (bmi >= 30) bmiCategory = 'Obese';
 
-        res.json({
+        res.status(200).json({
             success: true,
             risk,
             healthScore,
@@ -124,6 +137,4 @@ app.post('/api/health-plan', (req, res) => {
         console.error('Error generating plan:', error);
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
-});
-
-module.exports = app;
+}
