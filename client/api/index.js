@@ -1,5 +1,5 @@
-const express = require('express');
-const cors = require('cors');
+import express from 'express';
+import cors from 'cors';
 const app = express();
 
 app.use(cors());
@@ -126,4 +126,4 @@ app.post('/api/health-plan', (req, res) => {
     }
 });
 
-module.exports = app;
+export default app;
