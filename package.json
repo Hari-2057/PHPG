@@ -4,5 +4,9 @@
   "private": true,
   "scripts": {
     "build": "cd client && npm install && npm run build && cp -r dist ../dist && cp -r dist/* ../"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
   }
 }

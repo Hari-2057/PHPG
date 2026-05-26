@@ -46,7 +46,7 @@ const Form = () => {
                 water_intake: parseFloat(formData.water_intake)
             };
 
-            const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+            const apiUrl = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:3000' : '');
             const response = await axios.post(`${apiUrl}/api/health-plan`, dataToSend);
             navigate('/results', { state: response.data });
         } catch (error) {
